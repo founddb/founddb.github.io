@@ -3,8 +3,8 @@ const ninja = document.querySelector('ninja-keys');
 
 // add the home and posts menu items
 ninja.data = [{
-    id: "nav-about",
-    title: "about",
+    id: "nav-founddb-foundation-models-for-database-systems",
+    title: "FoundDB: Foundation Models for Database Systems",
     section: "Navigation",
     handler: () => {
       window.location.href = "/";
