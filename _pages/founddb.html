@@ -1,0 +1,83 @@
+---
+layout: paper
+title: "FoundDB: Foundation Models for Database Systems"
+authors:
+- name: Andreas Zimmerer
+  affiliation: University of Technology Nuremberg
+  location: Nuremberg, Germany
+  url: https://www.linkedin.com/in/andi-zimmerer/
+- name: Damien Dam
+  affiliation: Snowflake Inc.
+  location: Berlin, Germany
+  url: https://www.linkedin.com/in/damien-dam/
+- name: Jan Kossmann
+  affiliation: Snowflake Inc.
+  location: Berlin, Germany
+  url: https://scholar.google.de/citations?hl=en&user=nIYiva8AAAAJ
+- name: Juliane Waack
+  affiliation: Snowflake Inc.
+  location: Berlin, Germany
+  url: https://www.linkedin.com/in/juliane-waack-327171202/
+- name: Ismail Oukid
+  affiliation: Snowflake Inc.
+  location: Berlin, Germany
+  url: https://scholar.google.de/citations?hl=en&user=QmwXUf4AAAAJ
+- name: Andreas Kipf
+  affiliation: University of Technology Nuremberg
+  location: Nuremberg, Germany
+  url: https://scholar.google.de/citations?hl=en&user=y3IdRusAAAAJ
+links:
+- title: "PDF"
+  icon: "fa-solid fa-download"
+  url: https://arxiv.org/pdf/2504.11540
+- title: "arXiv"
+  icon: "ai ai-arxiv"
+  url: https://arxiv.org/abs/2504.11540
+venue: "Proceedings of the 2025 ACM SIGMOD International Conference on Management of Data"
+permalink: "/"
+og_image: "/assets/img/posts/snowflake_pruning_flow.png"
+keywords: "Snowflake, Databases, Data Skipping, Pruning"
+description: >-
+  <p>
+  Modern cloud-based data analytics systems must efficiently process petabytes of data residing on cloud storage.
+  A key optimization technique in state-of-the-art systems like Snowflake is partition pruning&mdash;skipping chunks of data that do not contain relevant information for computing query results.
+  </p>
+  <p>
+  While partition pruning based on query predicates is a well-established technique, we demonstrate that its scope can be extended to <code>LIMIT</code>, top-k, and <code>JOIN</code> operations, dramatically expanding the opportunities for pruning across diverse query types.
+  </p>
+  <p>
+  Our analysis of Snowflake's production workloads reveals that real-world analytical queries exhibit much higher selectivity than commonly assumed, yielding effective partition pruning.
+  We show that we can harness high selectivity by utilizing only min/max metadata available in modern data analytics systems and data lake formats like Apache Iceberg, reducing the number of processed micro-partitions by 99.4%.
+  </p>
+citation: >-
+  @article{zimmerer2025pruning,
+    title = {Pruning in Snowflake: Working Smarter, Not Harder},
+    author = {Zimmerer, Andreas and Dam, Damien and Kossmann, Jan and Waack, Juliane and Oukid, Ismail and Kipf, Andreas},
+    journal = {arXiv preprint arXiv:2504.11540},
+    year = {2025},
+    doi = {10.1145/3722212.3724447},
+  }
+---
+
+
+<h2>Highlights</h2>
+
+<p>We presented four data pruning techniques that are used in the Snowflake data platform and evaluated them based on their pruning effectiveness on real-world customer workloads.
+The pruning flow is as follows:</p>
+<ol>
+  <li>First, all queries containing a <code>WHERE</code> predicate are subject to <em>filter pruning</em>, which removes data partitions by identifying the ones that do not contain any rows that would match the filter condition in the <code>WHERE</code> clause.</li>
+  <li>If the query is a simple <code>LIMIT</code> query without an <code>ORDER BY</code>, the query engine tries to reduce the number of partitions to the minimally necessary set of partitions such that the query result can be computed. This works for queries with and without <code>WHERE</code> clause.</li>
+  <li>While executing a join, the probe side of a join is subject to <em>join pruning</em>, i.e., removing partitions from the probe side that do not contain join partners based on the collected values from the build side.</li>
+  <li>Lastly, if a query is a top-k query, i.e., it contains an <code>ORDER BY ... LIMIT</code>, a specialized <em>top-k pruning</em> technique attempts to reduce the number of processed partitions by pushing runtime information about the current top-k heap down to the table scan.</li>
+</ol>
+<p>While the first two techniques can be applied during query optimization, the latter two techniques require runtime information about the current state of the query execution.</p>
+
+<h2>Related Links</h2>
+<ul>
+  <li>The blog series "<a href="https://www.snowflake.com/en/blog/super-fast-top-k-queries/">Say Hello to Superfast Top&#8209;K Queries in Snowflake</a>", "<a href="https://www.snowflake.com/en/blog/continued-investments-in-price-performance-and-faster-top-k-queries/">Continued Investments in Price Performance and Faster Top&#8209;K Queries</a>", and "<a href="https://www.snowflake.com/en/engineering-blog/optimizing-top-k-aggregation-snowflake/">Reimagining Top&#8209;K Aggregation Optimization at Snowflake</a>" focuses on optimizations regarding pruning capabilities of Top&#8209;K queries in Snowflake.</li>
+  <li>The blog post "<a href="https://www.snowflake.com/en/engineering-blog/iceberg-data-pruning/">Pruning for Iceberg: 90% of an Iceberg Is Underwater</a>" elaborates on pruning in Snowflake on Apache Iceberg tables.</li>
+</ul>
+
+
+<h2>Follow-Up Work and Scientific Discourse</h2>
+No follow-up work has been published yet. Please reach out to the main author of this paper if you think your work should be included here.

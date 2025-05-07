@@ -1,0 +1,94 @@
+---
+layout: default
+---
+{% if page._styles %}
+  <!-- Page/Post style -->
+  <style type="text/css">
+    {{ page._styles }}
+  </style>
+{% endif %}
+
+<div class="post">
+  <header class="post-header">
+    {% if page.venue %}
+    <span class="d-block text-muted text-center fst-italic mt-4 mb-2">Published in: {{page.venue}}</span>
+    {% endif %}
+    <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
+  </header>
+
+  {% if page.authors %}
+    <style>
+    .paper-author-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: baseline;
+        gap: 1em 10px;
+        margin-top: 1em;
+        margin-bottom: 1.5em;
+        max-width: 7in;  /* 6.75in would be textwidth of ACM Latex template */
+    }
+    
+    .paper-author {
+        flex: 1 1 215px; /* 220px is based on width of widest element, but 170px works better with smaller layouts */
+        text-align: center;
+        line-height: 1.2em;
+    }
+    </style>
+
+    <div class="d-flex justify-content-center">
+      <div class="paper-author-list">
+        {% for author in page.authors %}
+          <div class="paper-author">
+            <a href="{{ author.url }}" target="_blank" rel="noopener noreferrer">
+              <span class="d-block strong">{{ author.name }}</span>
+              <span class="d-block small">{{ author.affiliation }}</span>
+              <span class="d-block small">{{ author.location }}</span>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="d-flex justify-content-center flex-wrap gap-2 pt-1 pb-5">
+    {% for link in page.links %}
+    <a href="{{ link.url }}" class="btn btn-blue btn-sm rounded-pill px-3"><i class="{{ link.icon }} mr-2"></i>{{ link.title }}</a>
+    {% endfor %}
+    <a href="#cite" class="btn btn-blue btn-sm rounded-pill px-3"><i class="fa-solid fa-quote-left mr-2"></i>Cite</a>
+  </div>
+
+  <article>
+    <div class="d-flex justify-content-center">
+      <div class="w-75 mb-5" style="text-align: justify;">
+        <h2>Abstract</h2>
+        {{ page.description }}
+      </div>
+    </div>
+
+    {{ content }}
+  </article>
+
+
+    <div id="cite" class="mt-5">
+      <h2>Cite this Paper</h2>
+    {% capture citation_code -%}
+```bibtex
+{{ page.citation }}
+```
+    {%- endcapture %}
+    {{ citation_code | markdownify }}
+  </div>
+  
+
+  {% if page.related_publications %}
+    <h2>References</h2>
+    <div class="publications">
+      {% bibliography --cited_in_order %}
+    </div>
+  {% endif %}
+
+  {% if site.giscus and page.giscus_comments %}
+    {% include giscus.liquid %}
+  {% endif %}
+</div>
